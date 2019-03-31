@@ -4,7 +4,7 @@ lambdaprime <id.blackmesa@gmail.com>
 
 # Download
 
-You can download **overwatch** from [here](https://github.com/lambdaprime/overwatch/blob/master/release/overwatch.zip)
+You can download **overwatch** from [here](https://github.com/lambdaprime/overwatch/blob/master/release/overwatch.v2.zip)
 
 # Requirements
 
@@ -13,12 +13,13 @@ Java 11, libopencv3.2-java
 # Usage
 
 ```
-java -jar overwatch.jar <OUTPUT_DIR>
+java -jar overwatch.jar [-d] <OUTPUT_DIR>
 ```
 
 Where: 
 
-* OUTPUT_DIR - directory where images are going to be stored.
+* OUTPUT_DIR -- directory where images are going to be stored.
+* -d -- will make **overwatch** to save only delta between the first frame and the new one. 
 
 # Examples
 
