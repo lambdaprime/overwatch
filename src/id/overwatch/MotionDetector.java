@@ -68,9 +68,13 @@ public class MotionDetector implements Subscriber<Mat> {
                 .collect(Collectors.toList());
 
         if (!points.isEmpty()) {
+            double minX = points.stream().map(p -> p.x).min(Double::compareTo).get();
+            double maxX = points.stream().map(p -> p.x).max(Double::compareTo).get();
+            double minY = points.stream().map(p -> p.y).min(Double::compareTo).get();
+            double maxY = points.stream().map(p -> p.y).max(Double::compareTo).get();
             Imgproc.rectangle(frame,
-                    points.stream().min(this::mostLeft).get(),
-                    points.stream().max(this::mostLeft).get(),
+                    new Point(minX, maxY),
+                    new Point(maxX, minY),
                     new Scalar(0, 255, 0), 2);
         }
 
