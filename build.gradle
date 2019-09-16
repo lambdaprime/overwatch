@@ -1,0 +1,62 @@
+// gradle clean build
+
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+ 
+dependencies {
+    implementation files('/usr/share/java/opencv-320.jar')
+}
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+String releaseFileName = "overwatch.v3.zip"
+
+jar { 
+    manifest { 
+        attributes 'Main-Class': 'id.overwatch.Overwatch'
+    }
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+            '--module-path', classpath.asPath,
+        ]
+        classpath = files()  
+    }
+}
+
+task packageDistribution(type: Zip) {
+    archiveFileName = releaseFileName
+    destinationDirectory = file("$projectDir/release")
+    from file("$projectDir/release/overwatch")
+}
+
+task createRelease(type: Copy) {
+    def out = 'release/overwatch/overwatch'
+    from jar.archiveFile
+    into out
+    from "$projectDir/README.md"
+    into out
+}
+
+task cleanRelease(type: Delete) {
+    delete "$projectDir/release"
+}
+
+packageDistribution.dependsOn createRelease
+assemble.dependsOn packageDistribution
+clean.dependsOn cleanRelease
+
+task copyReadme(type: Copy) {
+    from("$projectDir/README.md")
+    into("$projectDir/src/main/resources")
+}
+
+compileJava.dependsOn copyReadme
