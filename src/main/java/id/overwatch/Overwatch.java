@@ -30,7 +30,7 @@ public class Overwatch {
 
     @SuppressWarnings("resource")
     static void usage() throws IOException {
-        Scanner scanner = new Scanner(Overwatch.class.getResource("README.md").openStream())
+        Scanner scanner = new Scanner(Overwatch.class.getResource("/README.md").openStream())
                 .useDelimiter("\n");
         while (scanner.hasNext())
             System.out.println(scanner.next());
