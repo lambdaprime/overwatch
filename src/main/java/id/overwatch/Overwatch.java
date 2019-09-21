@@ -5,7 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.opencv.core.MatOfInt;
@@ -17,6 +20,7 @@ public class Overwatch {
 
     private static String OUTPUT_DIR;
     private static boolean DELTA;
+    private static Optional<Integer> cameraId = Optional.empty();
     private static final Function<String, Boolean> defaultHandler = arg -> {
         switch (arg) {
         case "-d": DELTA = true; break;
@@ -24,6 +28,9 @@ public class Overwatch {
         }
         return true;
     };
+    private static final Map<String, Consumer<String>> handlers = Map.of(
+        "-c", id -> cameraId = Optional.of(Integer.parseInt(id))
+    );
 
     private static int HEIGHT = 300;
     private static int WIDTH = 300;
@@ -38,14 +45,14 @@ public class Overwatch {
 
     public static void main(String[] args) throws Exception {
         try {
-            new SmartArgs(Collections.emptyMap(), defaultHandler).parse(args);
+            new SmartArgs(handlers, defaultHandler).parse(args);
             if (OUTPUT_DIR == null) throw new RuntimeException();
         } catch (Exception e) {
             usage();
             System.exit(1);
         }
         Files.createDirectories(Paths.get(OUTPUT_DIR));
-        var camera = new Camera(HEIGHT, WIDTH);
+        var camera = new Camera(cameraId.orElse(0), HEIGHT, WIDTH);
         var canvas = new MyCanvas(HEIGHT, WIDTH);
         if (DELTA) {
             camera.subscribe(new DeltaExtractor((isChanged, m) -> {

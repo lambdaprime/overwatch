@@ -15,7 +15,7 @@ dependencies {
 sourceCompatibility = '11'
 targetCompatibility = '11'
 
-String releaseFileName = "overwatch.v3.zip"
+String releaseFileName = "overwatch.v4.zip"
 
 jar { 
     manifest { 
