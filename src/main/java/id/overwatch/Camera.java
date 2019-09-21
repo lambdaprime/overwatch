@@ -24,8 +24,8 @@ public class Camera implements Publisher<Mat> {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    public Camera(int h, int w) {
-        capture = new VideoCapture(0);
+    public Camera(int cameraId, int h, int w) {
+        capture = new VideoCapture(cameraId);
         if (!capture.isOpened()) {
             throw new RuntimeException("Cannot open the camera");
         }
