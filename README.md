@@ -6,7 +6,7 @@ You can download **overwatch** from [here](https://github.com/lambdaprime/overwa
 
 # Requirements
 
-Java 11, libopencv-java >= 3.2
+Java 17, libopencv-java >= 4.2
 
 # Usage
 

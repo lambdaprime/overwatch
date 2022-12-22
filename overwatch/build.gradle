@@ -1,0 +1,78 @@
+// include xfunction for updateVersion
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.github.lambdaprime:id.xfunction:14.0"
+    }
+}
+
+plugins {
+    id 'com.diffplug.spotless'
+}
+
+apply plugin : 'eclipse'
+
+eclipse.classpath.file {
+    // instruct eclipse plugin to put everything to module path
+    whenMerged {
+        entries.findAll { it.kind == 'lib' }.each { it.entryAttributes['module'] = 'true' }
+    }
+}
+
+dependencies {
+    implementation files('/usr/share/java/opencv.jar')
+}
+
+java {
+    // disable Gradle modularity support since it is not working properly
+    // for non modules like opencv and setup module path manually later:
+    // https://github.com/gradle/gradle/issues/17609
+    // https://github.com/gradle/gradle/issues/12630
+    modularity.inferModulePath = false
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+            '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+configurations {
+  customConfig.extendsFrom implementation
+}
+
+jar {
+    manifest { 
+        attributes 'Implementation-Version': "${rootProject.version}",
+        'Main-Class': 'id.overwatch.Overwatch'
+    }
+}
+
+task createRelease(type: Copy) {
+    def out = 'release'
+    from jar.archiveFile
+    into out
+}
+
+task cleanRelease(type: Delete) {
+    delete "$projectDir/release"
+}
+
+assemble.dependsOn createRelease
+clean.dependsOn cleanRelease
+
+task copyReadme(type: Copy) {
+    from("../README.md")
+    into("$buildDir/resources/main")
+    rename ("README.md", "README-${projectName}.md")
+}
+
+compileJava.dependsOn copyReadme
+
+// run spotless and format code before the build
+classes.dependsOn spotlessApply
