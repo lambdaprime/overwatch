@@ -2,7 +2,7 @@
 
 # Download
 
-You can download **overwatch** from [here](https://github.com/lambdaprime/overwatch/blob/master/release/)
+[Release versions](https://github.com/lambdaprime/overwatch/releases)
 
 # Requirements
 
