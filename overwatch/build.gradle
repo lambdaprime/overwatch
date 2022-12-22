@@ -53,16 +53,27 @@ jar {
     }
 }
 
-task createRelease(type: Copy) {
-    def out = 'release'
+def packageDir = "$buildDir/package/${projectName}"
+
+task createRelease(type: Zip) {
+    archiveFileName = "$releaseFileName"
+    destinationDirectory = file("$projectDir/release")
+    from file("$packageDir/..")
+}
+
+task createPackage(type: Copy) {
+    from "${project.rootDir}/README.md"
+    from "${project.rootDir}/LICENSE-2.0.txt"
     from jar.archiveFile
-    into out
+    into packageDir
 }
 
 task cleanRelease(type: Delete) {
+    delete "$packageDir"
     delete "$projectDir/release"
 }
 
+createRelease.dependsOn createPackage
 assemble.dependsOn createRelease
 clean.dependsOn cleanRelease
 
