@@ -58,7 +58,7 @@ public class Overwatch {
             camera.subscribe(new DeltaExtractor((isChanged, m) -> {
                 if (isChanged) {
                     Path p = Paths.get(OUTPUT_DIR, "overwatch" + System.currentTimeMillis() + ".png");
-                    Imgcodecs.imwrite(p.toString(), m, new MatOfInt(Imgcodecs.CV_IMWRITE_PNG_COMPRESSION));
+                    Imgcodecs.imwrite(p.toString(), m, new MatOfInt(Imgcodecs.IMWRITE_PNG_COMPRESSION));
                 }
                 canvas.update(m);
 
